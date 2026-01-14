@@ -1,10 +1,12 @@
 # setup_git_sync.ps1
 # 依據 docs/git同步備份branch.md 建立的同步腳本
 
-$BackupUrl = "git@github.com:edwin45168899/Laravel_Sail.git"
-$MainUrl = "git@github.com-chiisen:chiisen/Laravel_Sail.git"
-$MainUrl1 = "git@github.com-edwiin1688:edwiin1688/Laravel_Sail.git"
-$MainUrl2 = "git@github.com-NathanEvans1221:NathanEvans1221/Laravel_Sail.git"
+$RepoName = "Laravel_Sail"
+
+$BackupUrl = "git@github.com:edwin45168899/$RepoName.git"
+$MainUrl = "git@github.com-chiisen:chiisen/$RepoName.git"
+$MainUrl1 = "git@github.com-edwiin1688:edwiin1688/$RepoName.git"
+$MainUrl2 = "git@github.com-NathanEvans1221:NathanEvans1221/$RepoName.git"
 
 Write-Output "正在設定 Git 遠端同步..."
 Write-Output "備份遠端: $BackupUrl"

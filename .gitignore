@@ -22,3 +22,9 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+#desktop.ini
+#folderico-green.ico
+#setup_git_sync.ps1
+npm-debug.log
+yarn-error.log
+mydatabase

@@ -20,7 +20,8 @@ services:
             LARAVEL_SAIL: 1
             # Xdebug 除錯工具預設為關閉。若需啟用，請在 .env 設定 SAIL_XDEBUG_MODE=develop,debug
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}' # 修正 Laravel Ignition 錯誤頁面的檔案路徑映射
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            XDEBUG_SESSION: 1
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
             # 將目前目錄掛載到容器內的 /var/www/html，實現程式碼即時同步

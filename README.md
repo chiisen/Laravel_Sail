@@ -84,6 +84,39 @@ docker compose up -d
 *   **`SAIL_XDEBUG_CONFIG`**
     *   **用途**：傳遞額外的 Xdebug 參數。
     *   **預設值**：`"client_host=host.docker.internal"`，這能引導 Xdebug 正確連接回你的 IDE（如 VS Code 或 PHPStorm）。
+*   **確認 Xdebug 狀態**
+    *   瀏覽器訪問：`http://localhost/xdebug`
+    *   檢查重點：搜尋 "Step Debugger"，確認其狀態為 **✔ enabled**。
+
+### 🐞 Xdebug 故障排除 SOP (Troubleshooting)
+如果設定了中斷點（Breakpoint）卻無法停住，請依序執行以下步驟檢查：
+
+1.  **確認 Xdebug 是否已正確連線（Step Debugger）**
+    *   瀏覽 [http://localhost/xdebug](http://localhost/xdebug)
+    *   搜尋 **Step Debugger**，狀態必須為 **✔ enabled**。
+    *   若未啟用，請檢查 `.env` 中的 `SAIL_XDEBUG_MODE` 是否包含 `debug`。
+
+2.  **確認 VS Code 是否正在監聽**
+    *   左側「執行與偵錯 (Run and Debug)」面板是否已啟動？（狀態列應呈現橘色）。
+    *   是否選擇 **"Listen for Xdebug (Legacy)"**？
+
+3.  **檢查 Xdebug 連線日誌**
+    *   若上述都正常但仍無反應，請查看容器內的 Xdebug 錯誤日誌：
+        ```bash
+        ./vendor/bin/sail exec laravel.test cat /tmp/xdebug.log
+        ```
+    *   **常見錯誤**：
+        *   `Trigger value for 'XDEBUG_SESSION' not found`：表示 Xdebug 不知道現在需要除錯。
+            *   **解法**：在 `compose.yaml` 的 `environment` 區塊強制加入 `XDEBUG_SESSION: 1`。
+        *   `Time-out connecting to client`：表示容器無法連線到主機。
+            *   **解法**：確認 `SAIL_XDEBUG_CONFIG` 包含 `client_host=host.docker.internal`。
+            *   **解法**：確認 `launch.json` 中的 `hostname` 設為 `0.0.0.0`（允許來自外部的連線）。
+
+4.  **強制重啟**
+    *   修改配置後，務必執行 `down` 與 `up` 讓設定生效：
+        ```bash
+        ./vendor/bin/sail down && ./vendor/bin/sail up -d
+        ```
 
 ---
 

@@ -138,3 +138,7 @@ docker compose up -d
   - 包含常見錯誤排除（如未啟動容器即執行指令）。
   - **[NEW]** 新增「瀏覽器實測流程」，教您如何透過使用者註冊與 Tinker 指令，直接在網頁上驗證權限功能。
   - **[NEW]** 新增「資料庫驗證指南」，說明如何使用 phpMyAdmin 查看權限關聯表。
+
+- **[Inertia Page Props 配置指南](./docs/inertia-page-props.md)**
+  - 說明如何在 Laravel Inertia 專案中設定全域共享資料 (Shared Data)。
+  - 包含 Middleware 配置範例與 Vue 前端調用方式。

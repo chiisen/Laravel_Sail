@@ -24,6 +24,7 @@
 ### Added
 - 新增 `docs/laravel-permission-installation.md`：Spatie Laravel Permission 套件安裝指南，包含安裝步驟與 Browser/Tinker 測試流程。
 - 安裝 `laravel/breeze` 套件：提供標準的使用者註冊、登入與管理功能 (Auth Scaffolding)，作為測試權限的基礎。
+- 新增 `docs/inertia-page-props.md`：Inertia Page Props 配置指南，包含 Middleware 設定與 Vue 前端範例。
 
 ### Changed
 - `app/Models/User.php`: 引入 `HasRoles` Trait 並規範化程式碼格式。

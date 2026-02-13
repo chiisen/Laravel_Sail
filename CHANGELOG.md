@@ -25,6 +25,7 @@
 - 擴充翻譯檔案，新增 15+ 個認證相關的翻譯鍵值（英文與繁體中文）。
 - 新增 `docs/design-guidelines.md`：設計風格指南，記錄專案的 UI/UX 設計規範，包含配色方案、字體系統、間距系統、組件設計、頁面布局等完整規範。
 - 新增 `docs/laravel_session.md`：Laravel Session 與 Redis 儲存說明文件，詳述儲存機制、序列化格式與檢視方法。
+- 新增 `docs/i18n-security-guide.md`：前後端語系共享與安全保護機制文件，詳述自動化加密與混淆邏輯。
 
 ### Changed
 - 更新 `vite.config.js` 與 `resources/js/app.js` 以支援前後端共用語系檔。
@@ -60,7 +61,7 @@
 
 ### Changed
 - `app/Models/User.php`: 引入 `HasRoles` Trait 並規範化程式碼格式。
-- `README.md`: 擴充「進階指南 & 文件」區塊，新增 Laravel Session 與 Redis 儲存說明之連結。
+- `README.md`: 擴充「進階指南 & 文件」區塊，新增 Laravel Session 與 i18n 安全保護機制說明之連結。
 - `resources/views/welcome.blade.php`: 新增權限測試區塊，在首頁即時顯示當前登入使用者的權限狀態 (Has Permission / No Permission)。
 - 新增 `docs/laravel-testing.md`：Laravel Testing 指南文件，詳述如何在 Sail 環境下執行測試並產生 Coverage 報告。
 - 更新 `.gitignore`：將 `/coverage` 目錄加入忽略清單。

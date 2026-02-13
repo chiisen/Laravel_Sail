@@ -146,6 +146,10 @@ docker compose up -d
 - **[多語系 (i18n) 設定說明](./docs/i18n-setup.md)**
   - 說明如何整合 Laravel 與 Vue i18n，實現前後端單一語系檔 (Single Source of Truth)。
 
+- **[前後端語系共享與安全保護機制 (i18n Security)](./docs/i18n-security-guide.md)**
+  - 詳述如何建立具備自動化加密 (LZ-String) 與壓縮功能的語系系統。
+  - 包含 Vite 插件實作，旨在保護語系檔案免於大規模抓取 (Dumping)。
+
 - **[Session 與 Redis 儲存說明](./docs/laravel_session.md)**
   - 記錄專案中 Session 的儲存機制、序列化格式 (PHP Serialization) 以及安全性配置。
   - 提供多種查看 Session 資料的方法，包含 Redis CLI、Tinker 以及 Redis Insight 圖形化介面。

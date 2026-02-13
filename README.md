@@ -149,3 +149,10 @@ docker compose up -d
 - **[Session 與 Redis 儲存說明](./docs/laravel_session.md)**
   - 記錄專案中 Session 的儲存機制、序列化格式 (PHP Serialization) 以及安全性配置。
   - 提供多種查看 Session 資料的方法，包含 Redis CLI、Tinker 以及 Redis Insight 圖形化介面。
+
+- **[Laravel Testing 指南 (含 Coverage)](./docs/laravel-testing.md)**
+  - 說明如何在 Laravel Sail 環境中執行測試。
+  - 包含如何透過 Xdebug 或 PCOV 產生 HTML 格式的程式碼覆蓋率 (Code Coverage) 報告。
+  - [coverage](./coverage)
+
+  

@@ -62,3 +62,6 @@
 - `app/Models/User.php`: 引入 `HasRoles` Trait 並規範化程式碼格式。
 - `README.md`: 擴充「進階指南 & 文件」區塊，新增 Laravel Session 與 Redis 儲存說明之連結。
 - `resources/views/welcome.blade.php`: 新增權限測試區塊，在首頁即時顯示當前登入使用者的權限狀態 (Has Permission / No Permission)。
+- 新增 `docs/laravel-testing.md`：Laravel Testing 指南文件，詳述如何在 Sail 環境下執行測試並產生 Coverage 報告。
+- 更新 `.gitignore`：將 `/coverage` 目錄加入忽略清單。
+- 更新 `.env.example`：新增關於 `SAIL_XDEBUG_MODE` 支援 `coverage` 模式的說明。

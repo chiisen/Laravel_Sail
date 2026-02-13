@@ -10,6 +10,9 @@
 ### Added
 - 新增 `docs/development_guide.md`：開發常見操作指南，說明新增 Controller, Middleware, Model 等功能的標準流程與範例。
 - 建立多語系 (i18n) 基礎架構，整合 `laravel-vue-i18n` 套件。
+
+### Changed
+- 重構 `GEMINI.md`：移除與全域規則 (`~/.gemini/GEMINI.md`) 重複的內容，改為繼承模式，保留專案特有備忘。
 - 新增 `docs/i18n-setup.md` 說明文件 (含前後端語系機制比較)。
 - 新增 `lang/zh_TW.json` 繁體中文語系檔。
 - 新增 `lang/en.json` 英文語系檔 (防止前端切換語系時報錯)。

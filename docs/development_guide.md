@@ -168,3 +168,86 @@
         </AuthenticatedLayout>
     </template>
     ```
+
+---
+
+## 6. Laravel Tinker (REPL 互動式除錯工具)
+
+### 功能說明
+**Tinker** 是 Laravel 內建的 **REPL (Read-Eval-Print Loop)** 互動式命令行工具，允許開發者在命令行環境中直接與 Laravel 應用程式互動，包括：
+- 操作 Eloquent 模型與資料庫
+- 測試 Job、Event、Facade 等 Laravel 元件
+- 快速執行 PHP 程式碼片段
+- 除錯與資料探索
+
+### 啟動方式
+在專案根目錄執行：
+```bash
+./vendor/bin/sail artisan tinker
+```
+
+啟動後會進入 `psysh` 互動式環境，提示字為 `>>>`。
+
+### 使用範例
+
+#### 1. 查詢資料庫記錄
+```bash
+>>> use App\Models\User;
+>>> User::all();
+>>> User::find(1);
+>>> User::where('email', 'like', '%@example.com')->get();
+```
+
+#### 2. 建立/更新/刪除資料
+```bash
+>>> User::create(['name' => 'Test', 'email' => 'test@example.com', 'password' => bcrypt('password')]);
+>>> $user = User::find(1);
+>>> $user->name = 'Updated Name';
+>>> $user->save();
+>>> $user->delete();
+```
+
+#### 3. 測試 Eloquent 關聯
+```bash
+>>> $user = User::with('posts')->find(1);
+>>> $user->posts;
+>>> $post = $user->posts()->create(['title' => 'New Post', 'content' => 'Content']);
+```
+
+#### 4. 使用 Facade
+```bash
+>>> use Illuminate\Support\Facades\DB;
+>>> DB::table('users')->count();
+>>> DB::select('SELECT * FROM users WHERE id = ?', [1]);
+
+>>> use Illuminate\Support\Facades\Cache;
+>>> Cache::put('key', 'value', 3600);
+>>> Cache::get('key');
+```
+
+#### 5. 觸發 Event 或 Dispatch Job
+```bash
+>>> use App\Events\PostCreated;
+>>> use App\Models\Post;
+>>> $post = Post::find(1);
+>>> event(new PostCreated($post));
+
+>>> use App\Jobs\SendEmail;
+>>> dispatch(new SendEmail($user));
+```
+
+#### 6. 快速計算與測試
+```bash
+>>> 2 + 2
+>>> config('app.name')
+>>> app()->environment()
+>>> now()->format('Y-m-d H:i:s')
+```
+
+### 離開 Tinker
+輸入 `exit` 或按 `Ctrl + D` 離開互動式環境。
+
+### 注意事項
+- Tinker 的變更會**直接影響資料庫**，請謹慎操作
+- 在生產環境中建議限制 Tinker 的使用權限
+- 可使用 `php artisan tinker --execute="code"` 執行單行命令後立即退出

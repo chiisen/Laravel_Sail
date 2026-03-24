@@ -133,39 +133,87 @@ docker compose up -d
 
 ## 📚 進階指南 & 文件
 
+### 🔰 新手必讀
+
+- **[開發常見操作指南 (Development Guide)](./docs/development_guide.md)**
+  - 📖 **新手首選**！說明如何新增常見的功能模組 (Controller, Middleware, Model 等)。
+  - 提供指令操作與程式碼範例，包含後端與前端 (Inertia Page) 的整合方式。
+  - **新增 Tinker 教學**：詳細介紹 Laravel Tinker 的功能與使用範例。
+
+- **[Laravel Tinker 使用指南](./docs/laravel_tinker.md)**
+  - 🛠️ **除錯神器**！REPL 互動式命令行工具的完整教學。
+  - 包含模擬登入、SQL 日誌監控、服務層測試等實用範例。
+  - 詳細解析每行程式碼的作用，並提供 N+1 查詢除錯技巧。
+  - **新手友善**：包含 FAQ 常見問題與視覺化流程圖。
+
+---
+
+### 🏗️ 專案架構
+
+- **[專案目錄架構說明 (Project Structure)](./docs/project_structure.md)**
+  - 介紹本專案的前端 (Vue/Inertia) 與後端 (Laravel) 目錄結構與職責。
+  - 條列主要功能模組 (Components, Layouts, Controllers) 的存放位置。
+
+- **[Inertia Page Props 配置指南](./docs/inertia-page-props.md)**
+  - 說明如何在 Laravel Inertia 專案中設定全域共享資料 (Shared Data)。
+  - 包含 Middleware 配置範例與 Vue 前端調用方式。
+
+---
+
+### 🔐 權限與安全
+
 - **[Spatie Laravel Permission 安裝與設定](./docs/laravel-permission-installation.md)**
   - 詳細說明如何在 Laravel Sail 環境下正確安裝並設定 `spatie/laravel-permission` 權限管理套件。
   - 包含常見錯誤排除（如未啟動容器即執行指令）。
   - **[NEW]** 新增「瀏覽器實測流程」，教您如何透過使用者註冊與 Tinker 指令，直接在網頁上驗證權限功能。
   - **[NEW]** 新增「資料庫驗證指南」，說明如何使用 phpMyAdmin 查看權限關聯表。
 
-- **[Inertia Page Props 配置指南](./docs/inertia-page-props.md)**
-  - 說明如何在 Laravel Inertia 專案中設定全域共享資料 (Shared Data)。
-  - 包含 Middleware 配置範例與 Vue 前端調用方式。
-
-- **[多語系 (i18n) 設定說明](./docs/i18n-setup.md)**
-  - 說明如何整合 Laravel 與 Vue i18n，實現前後端單一語系檔 (Single Source of Truth)。
-
 - **[前後端語系共享與安全保護機制 (i18n Security)](./docs/i18n-security-guide.md)**
   - 詳述如何建立具備自動化加密 (LZ-String) 與壓縮功能的語系系統。
   - 包含 Vite 插件實作，旨在保護語系檔案免於大規模抓取 (Dumping)。
 
-- **[Session 與 Redis 儲存說明](./docs/laravel_session.md)**
-  - 記錄專案中 Session 的儲存機制、序列化格式 (PHP Serialization) 以及安全性配置。
-  - 提供多種查看 Session 資料的方法，包含 Redis CLI、Tinker 以及 Redis Insight 圖形化介面。
+---
+
+### 🌍 多語系 (i18n)
+
+- **[多語系 (i18n) 設定說明](./docs/i18n-setup.md)**
+  - 說明如何整合 Laravel 與 Vue i18n，實現前後端單一語系檔 (Single Source of Truth)。
+
+- **[多語系實作總結 (i18n Implementation Summary)](./docs/i18n-implementation-summary.md)**
+  - 記錄多語系功能的完整實作過程與技術決策。
+  - 包含遇到的挑戰與解決方案。
+
+---
+
+### 🧪 測試與除錯
 
 - **[Laravel Testing 指南 (含 Coverage)](./docs/laravel-testing.md)**
   - 說明如何在 Laravel Sail 環境中執行測試。
   - 包含如何透過 Xdebug 或 PCOV 產生 HTML 格式的程式碼覆蓋率 (Code Coverage) 報告。
   - [coverage](./coverage)
 
-- **[專案目錄架構說明 (Project Structure)](./docs/project_structure.md)**
-  - 介紹本專案的前端 (Vue/Inertia) 與後端 (Laravel) 目錄結構與職責。
-  - 條列主要功能模組 (Components, Layouts, Controllers) 的存放位置。
+- **[Session 與 Redis 儲存說明](./docs/laravel_session.md)**
+  - 記錄專案中 Session 的儲存機制、序列化格式 (PHP Serialization) 以及安全性配置。
+  - 提供多種查看 Session 資料的方法，包含 Redis CLI、Tinker 以及 Redis Insight 圖形化介面。
 
-- **[開發常見操作指南 (Development Guide)](./docs/development_guide.md)**
-  - 說明如何新增常見的功能模組 (Controller, Middleware, Model 等)。
-  - 提供指令操作與程式碼範例，包含後端與前端 (Inertia Page) 的整合方式。
+---
+
+### 🤖 AI 輔助工具
+
+- **[Aider 使用指南](./docs/aider_guide.md)**
+  - 說明如何使用 Aider AI 輔助編程工具加速開發。
+  - 包含常見使用情境與指令範例。
+
+- **[GrepAI 使用指南](./docs/grepai_guide.md)**
+  - 說明如何使用 GrepAI 進行程式碼搜尋與分析。
+
+---
+
+### 🎨 設計規範
+
+- **[設計系統指南 (Design System)](./docs/design-guidelines.md)**
+  - 定義專案的 UI/UX 設計規範與元件使用方式。
+  - 包含色彩、排版、間距等視覺設計標準。
 
 
   

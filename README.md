@@ -172,10 +172,19 @@ docker compose up -d
     ```
     > 💡 **為什麼要執行這個？** 此指令會生成一組隨機字串並寫入 `.env` 的 `APP_KEY` 中，用於加密密碼、Session 與各類敏感資料。若沒有此金鑰，Laravel 會無法運行並顯示錯誤。
 
-*   **步驟 3-2：執行資料庫遷移**
+*   **步驟 3-2：執行資料庫遷移與 Seeding（推薦）**
+
+    **方式 A：遷移 + Seeding（推薦）** - 重置資料庫並建立測試帳號
+    ```bash
+    ./vendor/bin/sail artisan migrate:fresh --seed
+    ```
+
+    **方式 B：單純遷移** - 只執行資料庫遷移
     ```bash
     ./vendor/bin/sail artisan migrate
     ```
+
+    > 💡 **什麼是 Seeding？** Seeding 會自動建立測試用帳號，方便開發和測試。使用方式 A 可直接獲得測試帳號。
 
 ### 4. 瀏覽網站
 當上述步驟都完成後，打開瀏覽器訪問：
@@ -183,6 +192,36 @@ docker compose up -d
 👉 **[http://localhost](http://localhost)**
 
 你應該就能看到 Laravel 的歡迎頁面囉！🎉
+
+---
+
+## 🧪 測試帳號
+
+若在步驟 3-2 中執行了 `migrate:fresh --seed`，將自動建立以下測試帳號：
+
+| 帳號 | Email | 密碼 | 用途 |
+|------|-------|------|------|
+| Test User | `test@example.com` | `password` | 普通測試帳號 |
+| Admin User | `admin@example.com` | `password` | 管理員帳號 |
+| 隨機帳號 | 自動生成 (5 個) | `password` | 額外測試帳號 |
+
+### 登入測試帳號
+
+1. 在瀏覽器中訪問 **[http://localhost/login](http://localhost/login)**
+2. 使用上表中任意帳號登入
+3. 例如：
+   - 📧 Email: `test@example.com`
+   - 🔑 Password: `password`
+
+### 重新生成測試帳號
+
+如果想重新生成測試帳號（重置資料庫），執行：
+
+```bash
+./vendor/bin/sail artisan migrate:fresh --seed
+```
+
+> ⚠️ 此指令會刪除資料庫中的所有數據，請謹慎使用。
 
 #### 開發伺服器說明
 

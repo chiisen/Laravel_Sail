@@ -487,6 +487,43 @@ docker volume prune
 docker system prune -a --volumes
 ```
 
+#### Q4: Laravel 容器無法啟動，錯誤訊息：`ENV_APP_COLOR`
+
+**症狀：**
+```
+Error: Format string 'php artisan queue:work --queue=notifications_%(ENV_APP_COLOR)s'
+contains names ('ENV_APP_COLOR') which cannot be expanded.
+```
+
+**原因：**
+`.env` 中定義了 `APP_COLOR` 變數，但 `docker-compose.yaml` 沒有將其傳遞給容器，導致容器內的 Supervisor 配置無法找到此環境變數。
+
+**解決方案：**
+
+編輯 `docker-compose.yaml`，在 `laravel.test` 服務的 `environment` 段添加以下一行：
+
+```yaml
+services:
+    laravel.test:
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            DB_HOST: '${DB_HOST}'
+            APP_COLOR: '${APP_COLOR}'  # ← 添加這一行
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            # ... 其他設定
+```
+
+然後重啟容器：
+```bash
+docker compose down && docker compose up -d
+```
+
+**為什麼需要這個設定？**
+- Laravel 11+ 引入了 `APP_COLOR` 環境變數來控制命令列輸出顏色
+- Supervisor（容器內的進程管理器）使用此變數配置隊列工作進程
+- 如果 `.env` 有此設定，必須同時在 Docker Compose 中聲明，否則容器啟動時會失敗
+
 ---
 
 ## 📚 進階指南 & 文件

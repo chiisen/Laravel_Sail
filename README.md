@@ -192,10 +192,8 @@ docker compose up -d
 |--------|------|------|
 | **Laravel** | 80 | 後端應用伺服器 |
 | **Vite** | 5173 | 前端開發伺服器（Hot Module Replacement） |
-| **Reverb** | 7080 | WebSocket 伺服器（即時通訊） |
 
 - **Vite**：自動編譯 Vue/TypeScript，支援熱重載（修改代碼後瀏覽器自動刷新）
-- **Reverb**：提供 WebSocket 支持，用於實現即時功能（如通知、聊天等）
 
 > 💡 如果前端頁面無法加載資源（CSS/JS），請確認 Vite 伺服器是否正在運行。查看容器日誌：
 > ```bash

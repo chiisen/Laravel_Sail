@@ -7,6 +7,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: 'sail-8.4/app'
+        entrypoint: /var/www/html/docker-entrypoint.sh
         extra_hosts:
             # 允許容器透過 'host.docker.internal' 訪問本機服務
             - 'host.docker.internal:host-gateway'

@@ -257,6 +257,238 @@ docker compose up -d
 
 ---
 
+## 🔍 Docker 容器管理指南
+
+### 查看容器資訊
+
+#### 1. 查看所有運行中的容器
+```bash
+docker ps
+```
+
+#### 2. 查看所有容器（包含已停止的）
+```bash
+docker ps -a
+```
+
+#### 3. 查看特定容器詳細資訊
+```bash
+docker inspect <容器名稱或 ID>
+```
+
+---
+
+### 🔍 查找容器執行目錄的方法
+
+當你遇到 **Port 衝突** 或需要確認容器來源時，可以使用以下方法：
+
+#### 方法 1：查看容器的掛載資訊（最常用）
+```bash
+# 查看容器的 Volume 掛載與路徑資訊
+docker inspect <容器名稱> | grep -A 20 "Mounts"
+```
+
+**輸出範例：**
+```json
+"Mounts": [
+    {
+        "Type": "volume",
+        "Name": "sail-mysql",
+        "Source": "/var/lib/docker/volumes/sail-mysql/_data",
+        "Destination": "/var/lib/mysql",
+        ...
+    }
+]
+```
+
+#### 方法 2：查看容器的完整配置（最詳細）
+```bash
+# 輸出完整 JSON 配置，包含路徑、環境變數、網路等
+docker inspect <容器名稱>
+```
+
+**實用篩選技巧：**
+```bash
+# 只查看工作目錄
+docker inspect <容器名稱> --format='{{.Config.WorkingDir}}'
+
+# 只查看掛載點（JSON 格式）
+docker inspect <容器名稱> --format='{{json .Mounts}}' | jq
+
+# 只查看容器啟動路徑
+docker inspect <容器名稱> --format='{{.Path}}'
+```
+
+#### 方法 3：進入容器內部查看
+```bash
+# 進入容器並查看當前目錄
+docker exec -it <容器名稱> pwd
+
+# 列出容器內的文件
+docker exec -it <容器名稱> ls -la
+```
+
+#### 方法 4：查看容器的專案來源
+```bash
+# 查看容器是從哪個 compose 專案啟動的
+docker inspect <容器名稱> --format='{{index .Config.Labels "com.docker.compose.project"}}'
+```
+
+---
+
+### 🧹 清理舊容器（解決 Port 衝突）
+
+#### 情境：遇到 Port 已被佔用的錯誤
+
+**步驟 1：找出佔用 Port 的容器**
+```bash
+# 查看所有容器，找到佔用特定 Port 的容器
+docker ps -a
+
+# 或搜尋特定名稱的容器
+docker ps -a | grep phpmyadmin
+```
+
+**步驟 2：確認容器來源**
+```bash
+# 查看容器屬於哪個 compose 專案
+docker inspect <容器名稱> --format='{{index .Config.Labels "com.docker.compose.project"}}'
+```
+
+**步驟 3：停止並移除舊容器**
+```bash
+# 停止單一容器
+docker stop <容器名稱>
+
+# 移除單一容器
+docker rm <容器名稱>
+
+# 一次停止並移除多個容器（按名稱過濾）
+docker stop $(docker ps -aq --filter name=<關鍵字>)
+docker rm $(docker ps -aq --filter name=<關鍵字>)
+```
+
+**步驟 4：清理整個舊專案的容器**
+```bash
+# 如果容器名稱有專案前綴（如 jubilant-platform）
+docker stop $(docker ps -aq --filter name=jubilant-platform)
+docker rm $(docker ps -aq --filter name=jubilant-platform)
+```
+
+---
+
+### 📝 實戰案例：解決 Port 3307 衝突問題
+
+#### 問題現象
+執行 `docker compose up -d` 時出現錯誤：
+```
+Bind for 0.0.0.0:3307 failed: port is already allocated
+! phpmyadmin: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8)
+```
+
+#### 問題分析
+1. 執行 `docker ps` 查看運行中的容器
+2. 發現舊容器 `jubilant-platform-phpmyadmin-1` 佔用了 port 3307
+3. 該容器來自**其他已存在的專案**，不是目前專案的容器
+
+#### 解決步驟
+
+**步驟 1：確認舊容器資訊**
+```bash
+# 查看所有運行中的容器
+docker ps
+
+# 輸出範例：
+# CONTAINER ID   IMAGE                   NAMES
+# a5b9e3d7c527   phpmyadmin/phpmyadmin   jubilant-platform-phpmyadmin-1
+```
+
+**步驟 2：確認容器來源**
+```bash
+# 查看容器屬於哪個 compose 專案
+docker inspect jubilant-platform-phpmyadmin-1 --format='{{index .Config.Labels "com.docker.compose.project"}}'
+# 輸出：jubilant-platform（表示這是舊專案的容器）
+```
+
+**步驟 3：停止舊容器**
+```bash
+# 直接停止該容器
+docker stop jubilant-platform-phpmyadmin-1
+```
+
+**步驟 4：移除舊容器**
+```bash
+# 移除容器（釋放 port）
+docker rm jubilant-platform-phpmyadmin-1
+```
+
+**步驟 5：重新啟動目前專案**
+```bash
+# 回到目前專案目錄
+cd /Users/liao-eli/github/Laravel_Sail
+
+# 重新啟動
+docker compose up -d
+```
+
+#### 💡 關鍵發現
+- **容器名稱前綴** 代表它所屬的專案
+  - `laravel_sail-phpmyadmin-1` → 屬於 `laravel_sail` 專案
+  - `jubilant-platform-phpmyadmin-1` → 屬於 `jubilant-platform` 專案
+- 當 `docker compose down` 無效時，代表容器是從**其他目錄**或**不同專案名稱**啟動的
+- 最直接的方式：**使用 `docker stop` 和 `docker rm` 直接操作容器**
+
+---
+
+### 🎯 常見問題排除
+
+#### Q1: Port 衝突錯誤
+```
+Bind for 0.0.0.0:3307 failed: port is already allocated
+```
+
+**解決方案：**
+```bash
+# 1. 找出佔用 port 的容器
+docker ps -a | grep 3307
+
+# 2. 查看該容器屬於哪個專案
+docker inspect <容器名稱> --format='{{index .Config.Labels "com.docker.compose.project"}}'
+
+# 3. 停止並移除舊容器
+docker stop <容器名稱> && docker rm <容器名稱>
+
+# 4. 重新啟動
+docker compose up -d
+```
+
+#### Q2: 如何區分不同專案的容器？
+
+查看容器名稱的前綴：
+- `laravel_sail-phpmyadmin-1` → 屬於 `laravel_sail` 專案
+- `jubilant-platform-phpmyadmin-1` → 屬於 `jubilant-platform` 專案
+
+或使用指令：
+```bash
+# 列出所有容器及其所屬專案
+docker ps -a --format "table {{.Names}}\t{{.Label \"com.docker.compose.project\"}}"
+```
+
+#### Q3: 如何徹底清理 Docker 資源？
+
+```bash
+# 警告：這會刪除所有停止的容器、未使用的網路和懸掛的映像檔
+docker system prune
+
+# 刪除所有未使用的 volume（包含資料庫資料！）
+docker volume prune
+
+# 刪除所有容器、映像檔、volume（核彈選項，請謹慎使用）
+docker system prune -a --volumes
+```
+
+---
+
 ## 📚 進階指南 & 文件
 
 ### 🔰 新手必讀

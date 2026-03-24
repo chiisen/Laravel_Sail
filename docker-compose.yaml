@@ -28,6 +28,8 @@ services:
         volumes:
             # 將目前目錄掛載到容器內的 /var/www/html，實現程式碼即時同步
             - '.:/var/www/html'
+            # 自訂 Supervisor 配置，用於啟動 Vite 開發伺服器
+            - './docker/supervisor.conf:/etc/supervisor/conf.d/vite.conf'
         networks:
             - sail
         depends_on:

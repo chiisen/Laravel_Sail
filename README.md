@@ -579,6 +579,34 @@ docker compose down && docker compose up -d
 - Supervisor（容器內的進程管理器）使用此變數配置隊列工作進程
 - 如果 `.env` 有此設定，必須同時在 Docker Compose 中聲明，否則容器啟動時會失敗
 
+#### Q5: Vite 啟動報錯 `SyntaxError: Unexpected token ')'` (環境毀損修復)
+
+**症狀：**
+執行 `sail npm run dev` 時報錯：
+```
+file:///var/www/html/node_modules/vite/dist/node/cli.js:190
+  while (angledMatch = ANGLED_BRACKET_RE_GLOBAL./*BLOCKED exec*/v)) {
+                                                                  ^
+SyntaxError: Unexpected token ')'
+```
+
+**原因：**
+這通常是因為 `node_modules` 內的原始碼遭到外部干預（例如安全掃描工具、毀損的 AI 自動修復指令）竄改，將關鍵關鍵字 `exec(` 替換成了 `/*BLOCKED exec*/`，導致語法錯誤。
+
+**診斷流程：**
+可以使用以下指令檢查是否真的遭到竄改：
+```bash
+grep -R "BLOCKED" node_modules/vite
+```
+若有輸出，代表檔案已毀損。
+
+**解決方案 (重製環境 SOP)：**
+1. **停止服務**：`./vendor/bin/sail down`
+2. **刪除毀損檔案**：`rm -rf node_modules package-lock.json`
+3. **重新安裝依賴**：`./vendor/bin/sail npm install`
+4. **重啟服務**：`./vendor/bin/sail up -d`
+5. **啟動 Vite**：`./vendor/bin/sail npm run dev`
+
 ---
 
 ## 📚 進階指南 & 文件

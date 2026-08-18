@@ -92,6 +92,46 @@ gh project create \
 - `id` (node_id，如 `PVT_xxx`，用於 GraphQL 與 item-edit)
 - `url` (使用者瀏覽器連結)
 
+#### ⚠️ 必填欄位（避免日後變「孤兒 project」）
+
+GitHub events API 只回最近 90 天，**超過就無法追溯來源**。為了日後能對得起來，建立時**立刻**填三件事：
+
+```bash
+# 1. 命名（不可以預設 "untitled"，**title 必須帶 owner 前綴**，例如 `chiisen/<repo> Roadmap`）
+gh project edit <N> --owner <owner> --title "<owner>/<repo> Roadmap"
+
+# 2. 寫 description（這是唯一能查「為何建」的 metadata）
+gh project edit <N> --owner <owner> --description "<repo> 的 roadmap board。對應 issues 來源: https://github.com/<owner>/<repo>/issues"
+
+# 3. 立刻加入至少 1 個 issue（避免變空 project、無法從 items 反推來源）
+gh project item-add <N> --owner <owner> --url https://github.com/<owner>/<repo>/issues/<X>
+```
+
+並在 repo 的 `README.md` 或 `docs/roadmap.md` 寫一句：
+
+```markdown
+## Roadmap
+對應 GitHub Project：https://github.com/users/<owner>/projects/<N>
+```
+
+**事後查不到時的取證極限**：
+- `gh project field-list` 只列欄位，無法識別來源
+- `gh api graphql createdAt/updatedAt` 拿得到時間軸
+- `gh api /users/<you>/events` 只回最近 90 天
+- 90 天後 = 永久不可考
+
+#### 推薦工具：gh-project alias
+
+若不想每次手刻上面三條指令，可用 `gh-project` 工具（在 `~/.local/bin/`）：
+
+```bash
+gh-project new <owner>/<repo>    # 建 project + 寫 description + 自動加第一個 issue
+gh-project list                   # 列出所有 project（含 description）
+gh-project audit                  # 列出「缺少 description 或 0 items」的孤兒 project
+```
+
+腳本內容見 `~/.local/bin/gh-project`。
+
 ### 3.4 把 Issues 加入 Project
 ```bash
 gh project item-add <PROJECT_NUMBER> \
